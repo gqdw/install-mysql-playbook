@@ -1,0 +1,20 @@
+---
+  - hosts: all
+    remote_user: root
+#    sudo: yes
+#    vars:
+    
+    tasks:
+      - name: cp MariaDB.repo to /etc/yum.repos.d
+        copy: src=MariaDB.repo dest=/etc/yum.repos.d/MariaDB.repo
+      - name: yum install MariaDB-server MariaDB-client
+        yum: name={{ item }} state=installed
+        with_items: 
+          - MariaDB-server
+          - MariaDB-client
+
+      - name: config my.cnf
+        template:  src=my-huge.j2 dest=/etc/my.cnf.d/my.cnf
+
+      #- name: ensure mariadb is running
+      #  service: name=mysql state=started
